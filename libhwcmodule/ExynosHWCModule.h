@@ -17,18 +17,20 @@
 #ifndef ANDROID_EXYNOS_HWC_MODULE_H_
 #define ANDROID_EXYNOS_HWC_MODULE_H_
 #include <hardware/hwcomposer.h>
-#include <linux/s3c-fb.h>
-
+#include "s3cfb.h"
+// "/sys/devices/platform/samsung-pd.2/s3cfb.0/vsync_time"
 #define VSYNC_DEV_PREFIX "/sys/devices/"
-#define VSYNC_DEV_MIDDLE "platform/exynos-sysmmu.11"
-#define VSYNC_DEV_NAME  "exynos5-fb.1/vsync"
+#define VSYNC_DEV_MIDDLE "platform/samsung-pd.2"
+#define VSYNC_DEV_NAME  "s3cfb.0/vsync_time"
+
+#define BLENDING_MAX 0
 
 #define FIMD_WORD_SIZE_BYTES   16
 #define FIMD_BURSTLEN   8
 #define FIMD_ADDED_BURSTLEN_BYTES     4
 #define FIMD_BW_OVERLAP_CHECK
 
-#define TRY_SECOND_VSYNC_DEV
+#undef TRY_SECOND_VSYNC_DEV
 #ifdef TRY_SECOND_VSYNC_DEV
 #define VSYNC_DEV_NAME2  "exynos5-fb.1/vsync"
 #define VSYNC_DEV_MIDDLE2  "platform/exynos-sysmmu.30/exynos-sysmmu.11/"
@@ -40,8 +42,6 @@
 #define WIN_STATE_DISABLED  s3c_fb_win_config::S3C_FB_WIN_STATE_DISABLED
 #define WIN_STATE_COLOR     s3c_fb_win_config::S3C_FB_WIN_STATE_COLOR
 #define WIN_STATE_BUFFER    s3c_fb_win_config::S3C_FB_WIN_STATE_BUFFER
-#define BLENDING_NONE       S3C_FB_BLENDING_NONE
-#define BLENDING_MAX        S3C_FB_BLENDING_MAX
 #define PIXEL_FORMAT_MAX    S3C_FB_PIXEL_FORMAT_MAX
 
 const size_t SOC_NUM_HW_WINDOWS = S3C_FB_MAX_WIN;
@@ -51,16 +51,7 @@ typedef s3c_fb_win_config_data fb_win_config_data;
 
 inline s3c_fb_blending halBlendingToSocBlending(int32_t blending)
 {
-    switch (blending) {
-        case HWC_BLENDING_NONE:
-            return S3C_FB_BLENDING_NONE;
-        case HWC_BLENDING_PREMULT:
-            return S3C_FB_BLENDING_PREMULT;
-        case HWC_BLENDING_COVERAGE:
-            return S3C_FB_BLENDING_COVERAGE;
-        default:
-            return S3C_FB_BLENDING_MAX;
-    }
+    return BLENDING_MAX;
 }
 
 inline s3c_fb_pixel_format halFormatToSocFormat(int format)
