@@ -22,7 +22,7 @@ exynos4x12_dirs := \
 	gralloc \
 	libdisplaymodule \
 	libhdmimodule \
-	libhwcmodule
+	libhwcmodule \
 	libhwcutilsmodule
 
 
