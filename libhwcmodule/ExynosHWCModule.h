@@ -17,7 +17,7 @@
 #ifndef ANDROID_EXYNOS_HWC_MODULE_H_
 #define ANDROID_EXYNOS_HWC_MODULE_H_
 #include <hardware/hwcomposer.h>
-#include <linux/s3c-fb.h>
+#include "../../exynos4/include/s3c-fb.h"
 
 // this is a blatant lie
 #define VSYNC_DEV_PREFIX "/sys/devices/"
