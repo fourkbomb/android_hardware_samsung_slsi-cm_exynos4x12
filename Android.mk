@@ -20,7 +20,10 @@ ifeq ($(TARGET_SOC), exynos4x12)
 
 exynos4x12_dirs := \
 	gralloc \
-	libhwcutilsmodule \
+	libdisplaymodule \
+	libhdmimodule \
+	libhwcmodule
+	libhwcutilsmodule
 
 
 include $(call all-named-subdir-makefiles,$(exynos4x12_dirs))
