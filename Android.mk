@@ -13,12 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+LOCAL_PATH := $(call my-dir)
+
 ifeq ($(TARGET_SOC), exynos4x12)
 ifeq ($(TARGET_SLSI_VARIANT), cm)
 
 exynos4x12_dirs := libhwjpeg gralloc
 
-$(call all-named-subdir-makefiles,$(exynos4x12_dirs))
+include $(call all-named-subdir-makefiles,$(exynos4x12_dirs))
 
 endif
 endif
