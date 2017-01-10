@@ -16,7 +16,7 @@
 ifeq ($(TARGET_SOC), exynos4x12)
 ifeq ($(TARGET_SLSI_VARIANT), cm)
 
-exynos4x12_dirs := libhwjpeg
+exynos4x12_dirs := libhwjpeg gralloc
 
 $(call all-named-subdir-makefiles,$(exynos4x12_dirs))
 
