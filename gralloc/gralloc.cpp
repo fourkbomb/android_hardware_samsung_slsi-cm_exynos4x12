@@ -227,6 +227,8 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage,
         else
             return err;
     }
+    ALOGI("creating gralloc handle with flags %d", usage);
+    ALOGI("&0x1000000 => %d, &0x8000000 => %d, &0x4000000 => %d", usage & 0x1000000, usage & 0x8000000, usage & 0x4000000);
     *hnd = new private_handle_t(fd, size, usage, w, h, format, *stride,
                                 vstride);
 
@@ -390,11 +392,15 @@ static int gralloc_alloc(alloc_device_t* dev,
     if ((usage & GRALLOC_USAGE_GPU_BUFFER) && (w*h != (m->xres)*(m->yres)))
         usage &= ~GRALLOC_USAGE_GPU_BUFFER;
 
+    ALOGE("trying to alloc rgb: w=%d,h=%d,fmt=%d,usage=%d,ion_flags=%u,hnd=%p,stride=%p",
+            w, h, format, usage, ion_flags, hnd, stride);
     err = gralloc_alloc_rgb(m->ionfd, w, h, format, usage, ion_flags, &hnd,
-                            &stride);
+            &stride);
+    ALOGE_IF(err, "alloc rgb => %d. trying yuv", err);
     if (err)
         err = gralloc_alloc_yuv(m->ionfd, w, h, format, usage, ion_flags,
                                 &hnd, &stride);
+    ALOGE_IF(err, "alloc yuv => %d. bailing!", err);
     if (err)
         goto err;
 
@@ -468,6 +474,7 @@ int gralloc_device_open(const hw_module_t* module, const char* name,
         /* initialize our state here */
         memset(dev, 0, sizeof(*dev));
 
+        ALOGE("gralloc warming up");
         /* initialize the procs */
         dev->device.common.tag = HARDWARE_DEVICE_TAG;
         dev->device.common.version = 0;
