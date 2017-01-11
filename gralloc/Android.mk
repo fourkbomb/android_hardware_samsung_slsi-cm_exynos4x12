@@ -33,7 +33,7 @@ LOCAL_SRC_FILES :=	\
 	framebuffer.cpp \
 	mapper.cpp
 
-LOCAL_CFLAGS := -DLOG_TAG=\"gralloc\"
+LOCAL_CFLAGS := -DLOG_TAG=\"gralloc_exynos\"
 
 ifeq ($(BOARD_USE_BGRA_8888_FB),true)
 LOCAL_CFLAGS += -DUSE_BGRA_8888
