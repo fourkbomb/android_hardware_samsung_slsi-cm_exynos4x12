@@ -35,10 +35,6 @@ LOCAL_SRC_FILES :=	\
 
 LOCAL_CFLAGS := -DLOG_TAG=\"gralloc_exynos\"
 
-ifeq ($(BOARD_USE_BGRA_8888_FB),true)
-LOCAL_CFLAGS += -DUSE_BGRA_8888
-endif
-
 LOCAL_MODULE := gralloc.exynos4
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE_OWNER := samsung_arm

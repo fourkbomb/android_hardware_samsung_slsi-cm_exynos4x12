@@ -149,11 +149,9 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage,
         if (usage & GRALLOC_USAGE_HW_FB) {
             ALOGW_IF(sw_usage,
                     "framebuffer target should not have SW usage bits; ignoring");
-            format = HAL_PIXEL_FORMAT_BGRA_8888;
         } else if (usage & GRALLOC_USAGE_HW_VIDEO_ENCODER) {
             if (sw_usage)
                 return -EINVAL;
-            format = HAL_PIXEL_FORMAT_BGRA_8888;
         }
     }
 
@@ -161,7 +159,6 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage,
         case HAL_PIXEL_FORMAT_EXYNOS_ARGB_8888:
         case HAL_PIXEL_FORMAT_RGBA_8888:
         case HAL_PIXEL_FORMAT_RGBX_8888:
-        case HAL_PIXEL_FORMAT_BGRA_8888:
         case HAL_PIXEL_FORMAT_sRGB_A_8888:
         case HAL_PIXEL_FORMAT_sRGB_X_8888:
             bpp = 4;
@@ -183,7 +180,7 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage,
     }
 
     if (format != HAL_PIXEL_FORMAT_BLOB) {
-        if ((usage & GRALLOC_USAGE_HW_VIDEO_ENCODER) || (format == HAL_PIXEL_FORMAT_BGRA_8888)) {
+        if (usage & GRALLOC_USAGE_HW_VIDEO_ENCODER) {
             bpr = ALIGN(w, 16)* bpp;
             vstride = ALIGN(h, 16);
         } else {
