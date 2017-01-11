@@ -227,6 +227,8 @@ static int gralloc_alloc_rgb(int ionfd, int w, int h, int format, int usage,
         else
             return err;
     }
+    // FIXME what is this doing?
+    usage |= 0x8000000;
     ALOGI("creating gralloc handle with flags %d", usage);
     ALOGI("&0x1000000 => %d, &0x8000000 => %d, &0x4000000 => %d", usage & 0x1000000, usage & 0x8000000, usage & 0x4000000);
     *hnd = new private_handle_t(fd, size, usage, w, h, format, *stride,
