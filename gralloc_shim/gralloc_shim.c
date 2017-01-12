@@ -42,12 +42,12 @@ static int gralloc_alloc(alloc_device_t *dev,
 }
 
 struct gralloc_module_t HAL_MODULE_INFO_SYM;
+static struct gralloc_module_t *realHalSym = NULL;
 
 int gralloc_device_open(const hw_module_t* module, const char* name,
 		hw_device_t** device) {
 
 	void *lib;
-	gralloc_module_t *realHalSym;
 
 	struct alloc_device_t **gralloc = (struct alloc_device_t **)device;
 
@@ -70,18 +70,40 @@ int gralloc_device_open(const hw_module_t* module, const char* name,
 	}
 
 	// shim alloc
-	vendor_alloc = (*gralloc)->alloc;	
+	vendor_alloc = (*gralloc)->alloc;
 	(*gralloc)->alloc = &gralloc_alloc;
-
-	HAL_MODULE_INFO_SYM.registerBuffer = realHalSym->registerBuffer;
-	HAL_MODULE_INFO_SYM.unregisterBuffer = realHalSym->unregisterBuffer;
-	HAL_MODULE_INFO_SYM.lock = realHalSym->lock;
-	HAL_MODULE_INFO_SYM.unlock = realHalSym->unlock;
 
 	return 0;
 	dl_err:
 		dlclose(lib);
 		return -EINVAL;
+}
+
+int gralloc_lock(gralloc_module_t const* module,
+                        buffer_handle_t handle, int usage,
+                        int l, int t, int w, int h,
+                        void** vaddr) {
+	if (realHalSym == NULL) return -EINVAL;
+	return realHalSym->lock(realHalSym, handle, usage,
+			l, t, w, h, vaddr);
+}
+
+int gralloc_unlock(gralloc_module_t const* module,
+                          buffer_handle_t handle) {
+	if (realHalSym == NULL) return -EINVAL;
+	return realHalSym->unlock(realHalSym, handle);
+}
+
+int gralloc_register_buffer(gralloc_module_t const* module,
+                                   buffer_handle_t handle) {
+	if (realHalSym == NULL) return -EINVAL;
+	return realHalSym->registerBuffer(realHalSym, handle);
+}
+
+int gralloc_unregister_buffer(gralloc_module_t const* module,
+                                     buffer_handle_t handle) {
+	if (realHalSym == NULL) return -EINVAL;
+	return realHalSym->unregisterBuffer(realHalSym, handle);
 }
 
 static struct hw_module_methods_t gralloc_module_methods = {
@@ -98,8 +120,8 @@ struct gralloc_module_t HAL_MODULE_INFO_SYM = {
 		.author = "The LineageOS Project",
 		.methods = &gralloc_module_methods
 	},
-	.registerBuffer = NULL,
-	.unregisterBuffer = NULL,
-	.lock = NULL,
-	.unlock = NULL
+	.registerBuffer = gralloc_register_buffer,
+	.unregisterBuffer = gralloc_unregister_buffer,
+	.lock = gralloc_lock,
+	.unlock = gralloc_unlock
 };
