@@ -35,7 +35,7 @@ static int gralloc_alloc(alloc_device_t *dev,
 	ALOGI("vendor_alloc() complete. pHandle => %p, pStride => %p", pHandle, pStride);
 
 	// TODO inspect pHandle
-	struct private_handle_t *hnd = (struct private_handle_t *)pHandle;
+	struct private_handle_t *hnd = *(struct private_handle_t **)pHandle;
 	ALOGI("private_handle_t: %d,%d,%d // 0x%x,0x%x,0x%x,0x%x // 0x%x,0x%x,0x%x,0x%x,0x%x",
 			hnd->fd, hnd->fd1, hnd->fd2, hnd->magic, hnd->flags, hnd->size, hnd->offset,
 			hnd->format, hnd->width, hnd->height, hnd->stride, hnd->vstride);
